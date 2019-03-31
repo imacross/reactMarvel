@@ -12,6 +12,12 @@ const ts = '1';
 const auth = `ts=${ts}&apikey=${publicKey}&hash=${md5(`${ts}${privateKey}${publicKey}`)}`;
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      characters: null,
+    };
+  }
   componentDidMount = () => {
     this.GetInitialChararcters();
   };
@@ -19,14 +25,15 @@ class App extends Component {
   GetInitialChararcters() {
     $.getJSON(`${API_URL}/characters?${auth}&limit=5`, result => {
       const characters = result.data.results;
-      console.log(characters);
+      this.setState({ characters });
     });
   }
   render() {
+    console.log(this.state.characters);
     return (
       <div className="container">
         <SearchBar />
-        <CharacterList />
+        <CharacterList characters={this.state.characters} />
         <Details />
       </div>
     );
